@@ -10,14 +10,14 @@ const generateFibonacciNumbers = (amount: number): number[] => {
     return result;
 };
 
-export const getFibonacciDefault = (req: Request, res: Response) => {
-    res.send("hola fibo");
+export const getFibonacciDefault = async (req: Request, res: Response) => {
+    res.send("hola fibonacci");
 };
 
 export const getFibonacciNumbers = (req: Request, res: Response) => {
     !req.body.amount
         ? res.send(generateFibonacciNumbers(20))
         : typeof req.body.amount !== "number"
-        ? res.send("That's not a número, amigue")
+        ? res.status(400).send("That's not a número, amigue")
         : res.send(generateFibonacciNumbers(req.body.amount));
 };

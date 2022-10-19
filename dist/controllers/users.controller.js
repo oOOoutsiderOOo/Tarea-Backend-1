@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.editUser = exports.addUser = exports.getUsers = void 0;
+exports.deleteUser = exports.editUser = exports.addUser = exports.getUser = exports.getUsers = void 0;
 const user_schema_1 = __importDefault(require("../schemas/user.schema"));
 const index_1 = require("../index");
 const uuid_1 = require("uuid");
@@ -11,6 +11,10 @@ const getUsers = (req, res) => {
     res.send(index_1.db);
 };
 exports.getUsers = getUsers;
+const getUser = (req, res) => {
+    res.send(req.params);
+};
+exports.getUser = getUser;
 const addUser = (req, res) => {
     const { nombre, apellido, dni } = req.body;
     const newUser = {
@@ -26,8 +30,7 @@ const addUser = (req, res) => {
     }
     catch (err) {
         //console.warn(err);
-        res.statusCode = 400;
-        res.send(err.issues);
+        res.status(400).send(err.issues);
     }
 };
 exports.addUser = addUser;
@@ -36,7 +39,14 @@ const editUser = (req, res) => {
 };
 exports.editUser = editUser;
 const deleteUser = (req, res) => {
-    res.send("hola delete");
+    const userIndex = index_1.db.findIndex(user => user.ID === req.params.userID);
+    if (userIndex === -1) {
+        res.status(404).send("Usuario no encontrado");
+    }
+    else {
+        index_1.db.splice(userIndex, 1);
+        res.send("Usuario eliminado");
+    }
 };
 exports.deleteUser = deleteUser;
 //# sourceMappingURL=users.controller.js.map
